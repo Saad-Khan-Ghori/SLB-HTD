@@ -2,7 +2,7 @@
 
 Last reviewed: 2026-11-17. Review after major project changes.
 
-No Git history or release tags are available in this checkout. Earlier release chronology is **Needs verification**; no versions or historical release dates are inferred here.
+The initial Git import contains no earlier history or release tags. Earlier release chronology is **Needs verification**; no versions or historical release dates are inferred here.
 
 ## Unreleased
 

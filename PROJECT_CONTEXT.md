@@ -83,7 +83,7 @@ Preserve the baseline, measure a client source-port mitigation, and repeat compa
 
 ## Handover Notes
 
-Start with [README](README.md) and [AGENTS](AGENTS.md). Keep raw logs with numerical claims. Benchmark reruns delete matching logs and overwrite CSVs; archive the baseline first. Namespace setup removes existing namespaces with the same names, and the demo requires teardown. No Git repository exists in this checkout; prior release history and operational ownership are **Needs verification**.
+Start with [README](README.md) and [AGENTS](AGENTS.md). Keep raw logs with numerical claims. Benchmark reruns delete matching logs and overwrite CSVs; archive the baseline first. Namespace setup removes existing namespaces with the same names, and the demo requires teardown. The project was imported into Git after the documentation audit; prior release history and operational ownership are **Needs verification**.
 
 ## Glossary
 

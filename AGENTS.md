@@ -30,7 +30,7 @@ The functional suite is a standalone assertion-based script, not a pytest suite;
 
 ## Commit & Pull Request Guidelines
 
-This checkout has no Git history, so no established commit convention can be verified. Use a short imperative subject, such as `Fix loopback test paths`. In pull requests, describe the behavior changed, commands run, and any generated CSV, log, or capture changes; link the relevant issue and include figures or screenshots when visual output changes.
+The initial import has no earlier Git history, so no prior commit convention can be verified. Use a short imperative subject, such as `Fix loopback test paths`. In pull requests, describe the behavior changed, commands run, and any generated CSV, log, or capture changes; link the relevant issue and include figures or screenshots when visual output changes.
 
 ## Scope, architecture, and directory conventions
 
