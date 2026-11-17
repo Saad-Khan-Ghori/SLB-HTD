@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b28">
+  <title>SLB-HTD | Network lab</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">S<span></span></span><div><strong>SLB-HTD</strong><small>Network lab</small></div></div>
+    <div class="header-status"><span class="status-dot" aria-hidden="true"></span><span>Illustrative simulation</span></div>
+  </header>
+
+  <main class="workspace">
+    <aside class="controls" aria-label="Simulation settings">
+      <div class="side-intro"><span class="eyebrow">Experiment setup</span><h1>Build a run</h1><p>Adjust the policy and environment, then step through requests or play the scenario.</p></div>
+      <form id="config-form">
+        <fieldset>
+          <legend>Traffic</legend>
+          <label for="policy">Scheduling policy</label>
+          <select id="policy" name="policy">
+            <option value="rr">Round robin</option>
+            <option value="lc">Least connections</option>
+            <option value="iphash">IP hash</option>
+          </select>
+          <label for="client-source">Client source for manual request</label>
+          <select id="client-source" name="clientSource">
+            <option value="auto">Rotate .50 / .51 / .52</option>
+            <option value="192.168.10.50">192.168.10.50</option>
+            <option value="192.168.10.51">192.168.10.51</option>
+            <option value="192.168.10.52">192.168.10.52</option>
+          </select>
+          <label for="rate">Requests per simulated second <output id="rate-value" for="rate">3</output></label>
+          <input id="rate" name="rate" type="range" min="1" max="48" step="1" value="3">
+          <p class="field-note">One click sends one request. This sets spacing on the simulated clock.</p>
+          <label for="loss">Illustrative request loss <output id="loss-value" for="loss">0%</output></label>
+          <input id="loss" name="loss" type="range" min="0" max="100" step="1" value="0">
+          <p class="field-note">Per-request loss chance for the visual model; no TCP retransmission.</p>
+        </fieldset>
+        <fieldset>
+          <legend>Backend service time</legend>
+          <div class="triple-input">
+            <label for="delay-b1">B1 <input id="delay-b1" name="delayB1" type="number" min="0" max="1000" value="0" required><span>ms</span></label>
+            <label for="delay-b2">B2 <input id="delay-b2" name="delayB2" type="number" min="0" max="1000" value="50" required><span>ms</span></label>
+            <label for="delay-b3">B3 <input id="delay-b3" name="delayB3" type="number" min="0" max="1000" value="150" required><span>ms</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Health checks</legend>
+          <div class="pair-input">
+            <label for="fall">Mark DOWN after<input id="fall" name="fall" type="number" min="1" max="10" value="3" required><span>failed probes</span></label>
+            <label for="rise">Mark UP after<input id="rise" name="rise" type="number" min="1" max="10" value="2" required><span>healthy probes</span></label>
+          </div>
+          <p class="field-note">One probe per backend per simulated second.</p>
+        </fieldset>
+        <button class="apply-button" type="submit">Apply and reset run</button>
+      </form>
+      <div class="side-footnote">Runs entirely in this browser. It does not start Python, HAProxy, namespaces, or a benchmark.</div>
+    </aside>
+
+    <section class="stage" aria-label="Network simulation">
+      <div class="stage-head"><div><span class="eyebrow">Topology / seven namespaces</span><h2>Traffic path</h2></div><div class="stage-actions"><span id="sim-clock" class="clock">T + 00:00.0</span><button id="step-button" class="button button-primary" type="button">Send request</button><button id="probe-button" class="button button-outline" type="button">Probe +1s</button><button id="play-button" class="button button-outline" type="button" aria-pressed="false">Play</button><button id="reset-button" class="button button-ghost" type="button">Reset</button></div></div>
+      <div class="topology-panel">
+        <div class="topology-notice"><strong id="current-request-title">Ready for request #1</strong><span id="current-request-detail">Send a request to trace its route. Stop B2 to see detection-window 502s.</span></div>
+        <svg id="topology" viewBox="0 0 940 470" role="img" aria-label="Client through two routers and load balancer to three backend servers">
+          <defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7" fill="#6f8c9a"/></marker></defs>
+          <g class="network-lines">
+            <path id="path-client" d="M136 230 L270 230"/>
+            <path id="path-r1" d="M335 230 L455 230"/>
+            <path id="path-r2" d="M520 230 L640 230"/>
+            <path id="route-b1" d="M702 212 C770 212 770 100 822 100"/>
+            <path id="route-b2" d="M702 230 L822 230"/>
+            <path id="route-b3" d="M702 248 C770 248 770 360 822 360"/>
+          </g>
+          <g class="subnet-labels"><text x="188" y="205">192.168.10.0/24</text><text x="365" y="205">10.0.0.0/30</text><text x="548" y="205">192.168.20.0/24</text><text x="739" y="311">172.20.0.0/24</text></g>
+          <g class="node client-node"><rect x="38" y="180" width="105" height="100" rx="13"/><text class="node-mini" x="56" y="207">NS-CLIENT</text><text class="node-title" x="56" y="239">Clients</text><text class="node-detail" x="56" y="261">.50 · .51 · .52</text></g>
+          <g class="node router-node"><rect x="266" y="190" width="74" height="80" rx="13"/><text class="node-mini" x="280" y="218">ROUTER</text><text class="node-title" x="280" y="245">R1</text></g>
+          <g class="node router-node"><rect x="451" y="190" width="74" height="80" rx="13"/><text class="node-mini" x="465" y="218">ROUTER</text><text class="node-title" x="465" y="245">R2</text></g>
+          <g class="node proxy-node"><rect x="637" y="179" width="71" height="102" rx="13"/><text class="node-mini" x="650" y="206">NS-LB</text><text class="node-title" x="650" y="238">SLB</text><text class="node-detail" x="650" y="260">:8080</text></g>
+          <g id="svg-b1" class="node backend-node"><rect x="818" y="61" width="96" height="78" rx="13"/><circle class="node-led" cx="898" cy="78" r="5"/><text class="node-mini" x="834" y="87">BACKEND</text><text class="node-title" x="834" y="113">B1</text><text id="svg-b1-active" class="node-detail" x="834" y="129">0 active</text></g>
+          <g id="svg-b2" class="node backend-node"><rect x="818" y="191" width="96" height="78" rx="13"/><circle class="node-led" cx="898" cy="208" r="5"/><text class="node-mini" x="834" y="217">BACKEND</text><text class="node-title" x="834" y="243">B2</text><text id="svg-b2-active" class="node-detail" x="834" y="259">0 active</text></g>
+          <g id="svg-b3" class="node backend-node"><rect x="818" y="321" width="96" height="78" rx="13"/><circle class="node-led" cx="898" cy="338" r="5"/><text class="node-mini" x="834" y="347">BACKEND</text><text class="node-title" x="834" y="373">B3</text><text id="svg-b3-active" class="node-detail" x="834" y="389">0 active</text></g>
+          <g id="packet-layer" aria-hidden="true"></g>
+        </svg>
+        <div class="packet-legend"><span><i class="legend-request"></i> Request / response</span><span><i class="legend-probe"></i> Health probe</span><span><i class="legend-loss"></i> Loss / 502</span><span>Animations are slowed for visibility</span></div>
+        <div class="decision-panel"><strong>Why this route?</strong><span id="decision-explanation">Select a policy and send a request to see the selection rule.</span></div>
+        <div class="backend-strip" id="backend-strip" aria-label="Backend health and processing controls"></div>
+      </div>
+      <div class="analysis-grid">
+        <section class="metrics-panel" aria-labelledby="metrics-title"><div class="panel-head"><span class="eyebrow">Current run</span><h3 id="metrics-title">Observed counters</h3></div><div class="metrics" id="metrics"></div><div class="chart-heading"><strong>Recent requests</strong><span>served / lost / rejected</span></div><div id="history-chart" class="history-chart" role="img" aria-label="Recent request outcomes"></div></section>
+        <section class="requests-panel" aria-labelledby="requests-title"><div class="panel-head"><span class="eyebrow">Request by request</span><h3 id="requests-title">Route ledger</h3></div><div class="request-head"><span>ID / CLIENT</span><span>BACKEND</span><span>RESULT</span></div><ol id="requests-list" class="requests-list" aria-live="polite"></ol></section>
+        <section class="events-panel" aria-labelledby="events-title"><div class="panel-head"><span class="eyebrow">Health + traffic</span><h3 id="events-title">Event stream</h3></div><ol id="events-list" class="events-list" aria-live="polite"></ol></section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

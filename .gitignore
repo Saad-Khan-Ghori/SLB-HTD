@@ -1,0 +1,10 @@
+# Reproducible Python caches and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+# Local editor and OS files
+.vscode/
+.idea/
+.DS_Store
+# Evidence logs, CSVs, captures and reports are intentionally not ignored.

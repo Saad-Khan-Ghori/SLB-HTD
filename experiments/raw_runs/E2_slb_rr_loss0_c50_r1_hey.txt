@@ -1,0 +1,47 @@
+
+Summary:
+  Total:	30.3034 secs
+  Slowest:	0.5018 secs
+  Fastest:	0.0012 secs
+  Average:	0.0802 secs
+  Requests/sec:	617.2567
+  
+  Total data:	1284840 bytes
+  Size/request:	68 bytes
+
+Response time histogram:
+  0.001 [1]	|
+  0.051 [5891]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.101 [6183]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.151 [358]	|■■
+  0.201 [5881]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.252 [331]	|■■
+  0.302 [15]	|
+  0.352 [3]	|
+  0.402 [1]	|
+  0.452 [4]	|
+  0.502 [1]	|
+
+
+Latency distribution:
+  10% in 0.0019 secs
+  25% in 0.0180 secs
+  50% in 0.0534 secs
+  75% in 0.1523 secs
+  90% in 0.1610 secs
+  95% in 0.1897 secs
+  99% in 0.2072 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0035 secs, 0.0012 secs, 0.5018 secs
+  DNS-lookup:	0.0000 secs, 0.0000 secs, 0.0000 secs
+  req write:	0.0001 secs, 0.0000 secs, 0.0243 secs
+  resp wait:	0.0761 secs, 0.0008 secs, 0.2575 secs
+  resp read:	0.0004 secs, 0.0000 secs, 0.0351 secs
+
+Status code distribution:
+  [200]	18669 responses
+
+Error distribution:
+  [36]	Get "http://192.168.20.10:8080/": dial tcp 192.168.20.10:8080: connect: cannot assign requested address
+
